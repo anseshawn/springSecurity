@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/security
+             http://www.springframework.org/schema/security/spring-security.xsd">
+<!-- namespace, beans:beans를 이용해서 xml 파일 만들고 나면 web.xml context-paramd에 해당파일 등록해줘야 함 -->
+
+	<http auto-config="true" use-expressions="false">
+		<!-- <intercept-url pattern="/**" access="ROLE_USER" /> -->
+		<!-- 익명사용자 -->
+		<intercept-url pattern="/member/login" access="ROLE_ANONYMOUS" />
+		<intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+		
+		<logout logout-url="/logout" logout-success-url="/"/>
+		
+		<form-login
+			username-parameter="mid"
+			password-parameter="pwd"
+			login-page="/member/login"
+			default-target-url="/member/memberMain"
+			authentication-failure-url="/member/login?fail=true"
+		/>
+		
+	</http>
+	
+	<authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="user1234" password="1234" authorities="ROLE_USER"/> <!-- 해당 방식으로 들어온 사용자는 일반 유저로 분류(로그인 시 일반유저로 security context에 저장 된다) -->
+				<user name="atom1234" password="1234" authorities="ROLE_USER"/>
+				<user name="hkd1234" password="1234" authorities="ROLE_USER"/>
+				<user name="admin" password="admin" authorities="ROLE_ADMIN"/>
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>
